@@ -18,8 +18,8 @@ PROMPT_SIGN="#"
 PADDING="~"
 
 prompt_cmd() {
-  LAST_ARG=$_
   LAST_RET=$?
+  LAST_ARG=$_
   local GIT_BRANCH_NAME
   local GIT_STATUS
   local GIT_BRANCH
