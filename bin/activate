@@ -1,0 +1,16 @@
+
+if [[ -z "$PPROFILED" ]]; then
+  echo '$PPROFILED is not defined'
+
+else
+  PROFILE_D_DIR="$PPROFILED/profile.d"
+  if [ -d "$PROFILE_D_DIR" ] && ls "$PROFILE_D_DIR"/* > /dev/null 2>&1; then
+    for scr in "$PROFILE_D_DIR"/*.sh; do
+      source $scr;
+    done
+  fi
+
+  PATH=$PROFILE_D_DIR/bin:$PATH
+  export PATH
+fi
+
