@@ -109,4 +109,4 @@ prompt_cmd() {
   _=$LAST_ARG
 }
 
-export PROMPT_COMMAND=prompt_cmd
+PROMPT_COMMAND=prompt_cmd

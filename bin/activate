@@ -1,14 +1,26 @@
-
 if [[ -z "$PPROFILED" ]]; then
   echo '$PPROFILED is not defined'
-
 else
+  PROFILE_D_DIRS="$PPROFILED/scripts.common"
+  # Check if shell is interactive
+  case "$-" in
+  *i*)  
+    PROFILE_D_DIRS="$PROFILE_D_DIRS $PPROFILED/scripts.interactive"
+  ;;
+  *)
+    PROFILE_D_DIRS="$PROFILE_D_DIRS $PPROFILED/scripts.noninteractive"
+  ;;
+  esac
+
   PROFILE_D_DIR="$PPROFILED/profile.d"
-  if [ -d "$PROFILE_D_DIR" ] && ls "$PROFILE_D_DIR"/* > /dev/null 2>&1; then
-    for scr in "$PROFILE_D_DIR"/*.sh; do
-      source $scr;
-    done
-  fi
+  
+  for script_dir in $PROFILE_D_DIRS; do
+    if [ -d "$script_dir" ] && ls "$script_dir"/* > /dev/null 2>&1; then
+      for scr in "$script_dir"/*.sh; do
+        source $scr;
+      done
+    fi
+  done
 
   PATH=$PROFILE_D_DIR/bin:$PATH
   export PATH
