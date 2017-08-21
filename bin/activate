@@ -15,7 +15,7 @@ else
   PROFILE_D_DIR="$PPROFILED/profile.d"
   
   for script_dir in $PROFILE_D_DIRS; do
-    if [ -d "$script_dir" ] && ls "$script_dir"/* > /dev/null 2>&1; then
+    if [ -d "$script_dir" ] && ls "$script_dir"/*.sh > /dev/null 2>&1; then
       for scr in "$script_dir"/*.sh; do
         source $scr;
       done
