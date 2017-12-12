@@ -25,5 +25,15 @@ list_osmosis_labels()
 
 run_test()
 {
+    . ~/workspace/.env
+    let testNum=$1
+    if [ -n "$testNum" ] && [ "$testNum" != "0" ]; then
+        shift
+        echo "Looking for test: $testNum"
+        testFilePath=$(find $WORKSPACE_TOP/systests/ -type f -name "$testNum_*.py" | head -1)
+        echo "Found test: $testFilePath"
+        dockerize env LOGNAME="lital" run_test.sh "$testFilePath" "$@"
+        exit $?
+    fi
     dockerize env LOGNAME="lital" run_test.sh "$@"
 }
