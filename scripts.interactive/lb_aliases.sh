@@ -25,7 +25,8 @@ list_osmosis_labels()
 
 run_test()
 {
-    . ~/workspace/.env
+    pushd $HOME/workspace
+    . .env
     testNum=$(printf "%02d" $1)
     echo $testNum
     if [ -n "$testNum" ] && [ "$testNum" != "00" ]; then
@@ -37,6 +38,7 @@ run_test()
         return $?
     fi
     dockerize env LOGNAME="lital" run_test.sh "$@"
+    popd
 }
 
 get_lab_box()
