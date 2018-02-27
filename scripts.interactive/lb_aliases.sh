@@ -4,12 +4,23 @@ alias ssht="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
 prep_rootfs()
 {
+    FLAGFILE=/tmp/rootfs_build_flag
+    if [ -e $FLAGFILE ]; then
+        echo "Waiting for previous build... Flagfile of process $(cat $FLAGFILE) exists: $FLAGFILE"
+    fi
+    while [ -e $FLAGFILE ]; do
+        sleep 1
+        echo -n "."
+    done
+    echo
+    echo $$ > $FLAGFILE
     pushd $WORKSPACE_TOP/rootfs
     for rootfs_type in "$@"; do
         dockerize make rootfs_"$rootfs_type"
         dockerize make checkin_rootfs_"$rootfs_type"
     done
     popd
+    rm $FLAGFILE
 }
 
 
@@ -34,19 +45,21 @@ run_test()
     cd $HOME/workspace
     . .env
     testNum=$(printf "%02d" $1)
-    echo $LNAME
-    echo "==============================================================="
     echo $testNum
     if [ -n "$testNum" ] && [ "$testNum" != "00" ]; then
         shift
         echo "Looking for test: $testNum"
         testFilePath=$(find $WORKSPACE_TOP/systests/ -type f -name "${testNum}_*.py" | head -1)
         LNAME="$USER-$(basename $testFilePath)-$$"
+        echo $LNAME
+        echo "==============================================================="
         echo "Found test: $testFilePath"
         dockerize env LOGNAME="$LNAME" run_test.sh "$testFilePath" "$@"
         return $?
     fi
     LNAME="$USER-$(basename $1)-$$"
+    echo $LNAME
+    echo "==============================================================="
     dockerize env LOGNAME="$LNAME" run_test.sh "$@"
 }
 
