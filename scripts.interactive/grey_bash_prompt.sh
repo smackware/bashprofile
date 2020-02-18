@@ -2,7 +2,7 @@
 # Author: Lital Natan <litaln@gmail.com>
 # Description: Colorful, dual-lined bash prompt with git integration
 
-_BAR_COLOR="\[\033[0;34m\]"
+_BAR_COLOR="\[\033[0;32m\]"
 _BRACKET_COLOR="\[\033[1;34m\]"
 TEXT_COLOR="\[\033[0;1m\]"
 _DIRECTORY_COLOR=$TEXT_COLOR
