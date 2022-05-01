@@ -3,19 +3,32 @@
 #
 # Fancy two-line prompt with git integration
 #
-# ┌───=[ specious :: sharp -( 0 )-[ ~ ]-( master )
+# ┌───=[hh:mm:ss]=[user@host] -( jobs )-[ ~ ]-( master )
 # └──(
 #
 MC=34
 UC=33
 RC=31
 HC=39
-GC=32
+GC=32 # Git clean
+GD=31 # Git dirty
 TC=32
 
+prompt_cmd()
+{
+  GB=$(parse_git_branch_clean)
+}
 
-parse_git_dirty () {
-  [[ $(git status 2> /dev/null | tail -1) != "nothing to commit, working tree clean" ]] && echo "*"
+parse_git_branch_color () {
+  if [[ $(git status 2> /dev/null | tail -1) != "nothing to commit, working tree clean" ]]; then
+	  echo $GD
+  else
+	  echo $GC
+  fi
+}
+
+parse_git_branch_clean () {
+  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/^* //g'
 }
 
 parse_git_branch () {
@@ -23,7 +36,7 @@ parse_git_branch () {
 }
 
 show_git_prompt () {
-  git branch 2>/dev/null 1>&2 && echo -e "-( \e[$GC;1m$(parse_git_branch)\e[$MC;1m )"
+  git branch 2>/dev/null 1>&2 && echo -e "-( \e[$(parse_git_branch_color);1m${GB}\e[$MC;1m )"
 }
 
 if [[ -n $(type -t git) ]] ; then
@@ -46,3 +59,5 @@ PS1="
 case $TERM in screen*)
   PS1=${PS1}'\[\033k\033\\\]'
 esac
+
+PROMPT_COMMAND=prompt_cmd
