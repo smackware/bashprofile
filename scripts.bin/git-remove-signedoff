@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "Warning - you are about to change history, press CTRL-C now to abort or [Enter] to proceed"
+read
+git filter-branch -f --msg-filter "sed /^Signed-off-by:/d"

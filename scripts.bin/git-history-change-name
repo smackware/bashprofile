@@ -1,0 +1,17 @@
+#!/bin/bash
+
+OLD=$1
+export NEW=$2
+
+if [ -z "$OLD" ] || [ -z "$NEW" ]; then
+  echo "Usage: $0 [old-mail] [new-mail]"
+  exit 1
+fi
+
+git filter-branch -f --commit-filter "
+if [ \"\$GIT_AUTHOR_NAME\" = \"$OLD\" ];
+  then export GIT_AUTHOR_NAME=\"$NEW\";
+  fi; git commit-tree \"\$@\"
+" -- --branches --tags
+
+
